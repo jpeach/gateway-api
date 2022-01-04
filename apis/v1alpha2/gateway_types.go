@@ -479,6 +479,10 @@ const (
 	// must be in a standard IPv6 text representation
 	// (see [RFC 5952](https://tools.ietf.org/html/rfc5952)).
 	//
+	// This type is intended for specific addresses. Address ranges are not
+	// supported (e.g. you can not use a CIDR range like 127.0.0.0/24 as an
+	// IPAddress).
+	//
 	// Support: Extended
 	IPAddressType GatewayAddressType = "IPAddress"
 
