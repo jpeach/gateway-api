@@ -450,7 +450,7 @@ type GatewayAddress struct {
 	//
 	// +optional
 	// +kubebuilder:default=IPAddress
-	Type *AddressType `json:"type,omitempty"`
+	Type *GatewayAddressType `json:"type,omitempty"`
 
 	// Value of the address. The validity of the values will depend
 	// on the type and support by the controller.
@@ -462,14 +462,16 @@ type GatewayAddress struct {
 	Value string `json:"value"`
 }
 
-// AddressType defines how a network address is represented as a text string.
+// GatewayAddressType defines how a network address is represented as a text
+// string, specifically in the context of listener addresses for Gateways and
+// includes options over the base AddressType type such as Hostname.
 //
 // If the requested address is unsupported, the controller
 // should raise the "Detached" listener status condition on
 // the Gateway with the "UnsupportedAddress" reason.
 //
 // +kubebuilder:validation:Enum=IPAddress;Hostname;NamedAddress
-type AddressType string
+type GatewayAddressType string
 
 const (
 	// A textual representation of a numeric IP address. IPv4
@@ -478,7 +480,7 @@ const (
 	// (see [RFC 5952](https://tools.ietf.org/html/rfc5952)).
 	//
 	// Support: Extended
-	IPAddressType AddressType = "IPAddress"
+	IPAddressType GatewayAddressType = "IPAddress"
 
 	// A Hostname represents a DNS based ingress point. This is similar to the
 	// corresponding hostname field in Kubernetes load balancer status. For
@@ -486,14 +488,14 @@ const (
 	// name is used to expose a load balancer.
 	//
 	// Support: Extended
-	HostnameAddressType AddressType = "Hostname"
+	HostnameAddressType GatewayAddressType = "Hostname"
 
 	// A NamedAddress provides a way to reference a specific IP address by name.
 	// For example, this may be a name or other unique identifier that refers
 	// to a resource on a cloud provider such as a static IP.
 	//
 	// Support: Implementation-Specific
-	NamedAddressType AddressType = "NamedAddress"
+	NamedAddressType GatewayAddressType = "NamedAddress"
 )
 
 // GatewayStatus defines the observed state of Gateway.
