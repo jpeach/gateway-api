@@ -384,24 +384,31 @@ type AnnotationKey string
 // +kubebuilder:validation:MaxLength=4096
 type AnnotationValue string
 
-// AddressRouteMatches defines AddressMatch rules for inbound traffic according to
+// AddressRouteMatch defines NetworkAddress rules for inbound traffic according to
 // source and/or destination address of a packet or connection.
-type AddressRouteMatches struct {
+// Multiple match fields are ANDed together, i.e. the match will
+// evaluate to true only if all conditions are satisfied.
+// At least one match field is required.
+type AddressRouteMatch struct {
 	// SourceAddresses indicates the originating (source) network
 	// addresses which are valid for routing traffic.
 	//
 	// Support: Core
-	SourceAddresses []AddressMatch `json:"sourceAddresses"`
+	//
+	// +optional
+	SourceAddress *NetworkAddress `json:"sourceAddresses"`
 
 	// DestinationAddresses indicates the destination network addresses
 	// which are valid for routing traffic.
 	//
 	// Support: Core
-	DestinationAddresses []AddressMatch `json:"destinationAddresses"`
+	//
+	// +optional
+	DestinationAddress *NetworkAddress `json:"destinationAddresses"`
 }
 
-// AddressMatch defines matching rules for network addresses by type.
-type AddressMatch struct {
+// NetworkAddress defines matching rules for network addresses by type.
+type NetworkAddress struct {
 	// Type of the address, either IPAddress or NamedAddress.
 	//
 	// If NamedAddress is used this is a custom and specific value for each
@@ -414,7 +421,7 @@ type AddressMatch struct {
 	// Support: Custom (NamedAddress)
 	//
 	// +optional
-	Type *L4AddressType `json:"type,omitempty"`
+	Type *NetworkAddressType `json:"type,omitempty"`
 
 	// Value of the address. The validity of the values will depend
 	// on the type and support by the controller.
@@ -433,8 +440,8 @@ type AddressMatch struct {
 	Value string `json:"value"`
 }
 
-// L4AddressType defines how a network address is represented as a text string.
+// NetworkAddressType defines how a network address is represented as a text string.
 //
 // +kubebuilder:validation:Enum=IPAddress;NamedAddress
 // +kubebuilder:default=IPAddress
-type L4AddressType string
+type NetworkAddressType string
